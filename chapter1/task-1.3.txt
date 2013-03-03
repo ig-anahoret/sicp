@@ -1,0 +1,12 @@
+(define (sqr x) (* x x))
+
+(define (sum_of_squares x y) (+ (sqr x) (sqr y)))
+
+(define (square_of_bigger x y) (if (> x y) (sqr x) (sqr y)))
+
+(define (sum_of_bigger_squares x y z) 
+  (if (> x y) 
+      (+ (sqr x) (square_of_bigger y z))
+      (+ (sqr y) (square_of_bigger x z))
+  )
+)
