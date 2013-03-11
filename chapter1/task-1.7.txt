@@ -1,0 +1,40 @@
+#lang racket
+
+; При таком методе вычислинения квадратного корня, 
+; при той же дельте результат получается в два раза 
+; точнее ((10^-3)^2 = 10^-6). Это конечно приводит 
+; к увеличению количества вызовов процедуры sqrt-iter, 
+; но замена операции умножения на операцию вычитания 
+; (обе для чисел с плавающей запятой) как минимум
+; оставляет время выполнения таким же, как максимум -
+; даже уменьшает время выполнения (и это при удвоении
+; точности).
+
+(define delta 0.0000000001)
+
+(define (sqrt x)
+  (sqrt-iter 1.0 
+             (+ 0.0 x) 
+             x))
+
+(define (sqrt-iter guess new-guess x)
+  (if (good-enough? guess new-guess)
+      new-guess
+      (sqrt-iter new-guess 
+                 (improve new-guess x) 
+                 x)))
+
+(define (good-enough? new-guess old-guess)
+  (< (abs (- new-guess 
+             old-guess))
+     delta))
+
+(define (improve guess x)
+  (average guess 
+           (/ x 
+              guess)))
+
+(define (average x y)
+  (/ (+ x 
+        y)
+     2))
